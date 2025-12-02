@@ -25,7 +25,6 @@ defmodule ProductCodes do
 
   def has_doubles(number_string) do
     if String.match?(number_string, ~r/^([0-9]+)\1+$/) do
-      IO.puts(number_string)
       String.to_integer(number_string)
     else
       0

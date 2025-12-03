@@ -5,29 +5,27 @@ defmodule ProductCodes do
   end
 
   def find_bad(ranges) do
-    if length(ranges) == 0 do
-      0
-    else
-      range_bad(String.split(hd(ranges), "-")) + find_bad(tl(ranges))
+    case length(ranges) do
+      0 -> 0
+      _ -> range_bad(String.split(hd(ranges), "-")) + find_bad(tl(ranges))
     end
   end
 
   def range_bad(range) do
     first = hd(range)
     second = hd(tl(range))
-    if first == second do
-      has_doubles(first)
-    else
-      next_first = Integer.to_string(String.to_integer(first)+1)
-      has_doubles(first) + range_bad([next_first, second])
+    cond do
+      first == second -> has_doubles(first)
+      true ->
+        next_first = Integer.to_string(String.to_integer(first)+1)
+        has_doubles(first) + range_bad([next_first, second])
     end
   end
 
   def has_doubles(number_string) do
-    if String.match?(number_string, ~r/^([0-9]+)\1+$/) do
-      String.to_integer(number_string)
-    else
-      0
+    cond do
+      String.match?(number_string, ~r/^([0-9]+)\1+$/) -> String.to_integer(number_string)
+      true -> 0
     end
   end
 end
@@ -38,6 +36,8 @@ if length(args) < 1 do
 end
 
 filename = hd(args)
+
+regex = ~r/^([0-9]+)\1+$/
 
 case File.read("./#{filename}") do
   {:ok, body} -> ProductCodes.process(body)

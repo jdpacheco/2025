@@ -19,18 +19,15 @@ defmodule Battery do
     |> String.to_integer()
   end
 
-  def find_max_with_remainder(list, max, need) do
-    case length(tl(list)) do
-      ^need ->
-        cond do
-          hd(list) > max[:max] -> [max: hd(list), remainder: tl(list)]
-          true -> max
-        end
-      _ ->
-        cond do
-          hd(list) > max[:max] -> find_max_with_remainder(tl(list), [max: hd(list), remainder: tl(list)], need)
-          true -> find_max_with_remainder(tl(list), max, need)
-        end
+  def find_max_with_remainder([head | tail], max, need) do
+    current_max = cond do
+      head > max[:max] -> [max: head, remainder: tail]
+      true -> max
+    end
+
+    case length(tail) do
+      ^need -> current_max
+      _ -> find_max_with_remainder(tail, current_max, need)
     end
   end
 end
